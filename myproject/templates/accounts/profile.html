@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Perfil de {{ user.username }}</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>Fecha de registro: {{ user.date_joined }}</p>
+    <form method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Cerrar sesión</button>
+</form>
+
+</div>
+{% endblock %}

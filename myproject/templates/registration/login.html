@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %} <!-- Carga la biblioteca de estáticos -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="{% static 'accounts/styles.css' %}">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="header">Login</div>
+        <div class="form" id="form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button id="actionButton">Log In</button>
+            <div class="toggle">
+                <button id="toggleButton">¿No tienes una cuenta?</button>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'accounts/scripts.js' %}"></script>
+</body>
+</html>
