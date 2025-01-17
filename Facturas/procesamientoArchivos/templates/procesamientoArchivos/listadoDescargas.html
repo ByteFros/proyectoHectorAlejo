@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Facturas</title>
+</head>
+<body>
+    <h1>Facturas Disponibles</h1>
+    <ul>
+        {% for invoice in invoices %}
+        <li>
+            {{ invoice.file.name }}
+            - <a href="{% url 'procesamientoArchivos:download_invoice' invoice.id %}">Descargar</a>
+        </li>
+        {% empty %}
+        <li>No hay facturas disponibles.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'user_profile' %}">Volver al Panel</a>
+</body>
+</html>
