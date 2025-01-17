@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f4f4f9;
+}
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #00a3d5;
+    color: white;
+    position: relative; 
+}
+
+.logout {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #56c596; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.logout:hover {
+    background: #3fa376;
+}
+
+h1#welcomeMessage{
+    margin: 0;
+    font-size: 24px;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu ul li {
+    margin-bottom: 10px;
+}
+
+.menu ul li ul {
+    margin-top: 5px;
+    padding-left: 20px; /* Indentación para subcategorías */
+}
+
+.menu ul li ul li {
+    margin-bottom: 5px;
+}
+
+.menu ul li button {
+    width: 100%;
+    padding: 10px;
+    background: #00a3d5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.menu ul li button:hover {
+    background: #007af4;
+}
+
+.main-content {
+    width: 80%;
+    padding: 20px 30px;
+    margin-left: 20px;
+    overflow-y: auto; 
+    box-sizing: border-box;
+}
+
+.content {
+    display: flex; 
+    height: calc(90vh - 80px);
+    gap : 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form select, form input, form button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    background: #00a3d5;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background: #007af4;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center; 
+    margin-bottom: 20px; 
+    box-sizing: border-box;
+}
+
+.filter-container label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+#invoiceFilter {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+

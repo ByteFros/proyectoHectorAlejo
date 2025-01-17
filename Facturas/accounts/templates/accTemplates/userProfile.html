@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/css/userStyle.css' %}">
+    <title>Panel de Usuario</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="welcomeMessage">¡Bienvenid@, {{ user.username }}!</h1>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" id="logoutButton" class="logout">Logout</button>
+            </form>
+        </header>
+        <div class="content">
+            <aside class="menu">
+                <ul>
+                    <li><button id="uploadInvoice">Subir Factura</button></li>
+                    <li><button id="viewInvoices">Facturas</button></li>
+                    <li><button id="analysis">Análisis</button></li>
+                    <li><button id="downloadInvoice">Bajar Factura</button></li>
+                </ul>
+            </aside>
+            <main id="main-content">
+                <!-- Aquí puedes agregar contenido dinámico -->
+                <p>Este es tu panel principal. Pronto tendrás más opciones disponibles.</p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
