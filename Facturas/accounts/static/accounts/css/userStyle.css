@@ -70,7 +70,8 @@ h1#welcomeMessage{
 }
 
 .menu ul li button {
-    width: 100%;
+    margin-left: 10px; /* Espaciado desde el borde izquierdo */
+    width: calc(100% - 10px); /* Ajustar el ancho para compensar el margen */
     padding: 10px;
     background: #00a3d5;
     color: white;
