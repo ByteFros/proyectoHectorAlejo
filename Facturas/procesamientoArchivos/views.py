@@ -1,11 +1,10 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from .models import Invoice
-from .forms import InvoiceUploadForm
 from django.http import FileResponse, Http404
 import os
-
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .forms import InvoiceUploadForm
 
 @login_required
 def upload_invoice(request):
@@ -13,15 +12,12 @@ def upload_invoice(request):
         form = InvoiceUploadForm(request.POST, request.FILES)
         if form.is_valid():
             invoice = form.save(commit=False)
-            invoice.user = request.user
+            invoice.user = request.user  # Asocia la factura al usuario actual
             invoice.save()
-            return redirect('user_profile')  # Cambia por tu vista principal del usuario
-    else:
-        form = InvoiceUploadForm()
-    return render(request, 'procesamientoArchivos/subirArchivo.html', {'form': form})
-
-
-
+            return JsonResponse({'message': 'Factura subida correctamente.'}, status=200)
+        else:
+            return JsonResponse({'error': 'Formulario no válido.'}, status=400)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
 @login_required
 def download_invoice(request, invoice_id):
     try:

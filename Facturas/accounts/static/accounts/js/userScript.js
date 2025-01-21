@@ -14,52 +14,68 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '../login-registro/index.html';
     });
 
-    // Botón Subir Factura
+document.addEventListener('DOMContentLoaded', () => {
+    const mainContent = document.getElementById('main-content');
     const uploadInvoiceButton = document.getElementById('uploadInvoice');
+
     if (uploadInvoiceButton) {
         uploadInvoiceButton.addEventListener('click', () => {
+            // Renderiza dinámicamente el formulario en el contenedor
             mainContent.innerHTML = `
-                <form id="uploadForm">
+                <h1>Subir Factura</h1>
+                <form id="uploadForm" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${getCSRFToken()}">
                     <label for="fileInput">Seleccionar archivo:</label>
-                    <input type="file" id="fileInput" required>
-                    <label for="invoiceType">Tipo de factura:</label>
-                    <select id="invoiceType" required>
-                        <option value="" disabled selected>Seleccione un tipo</option>
-                        <option value="pagada">Pagada</option>
-                        <option value="cobrada">Cobrada</option>
-                    </select>
+                    <input type="file" id="fileInput" name="file" required>
                     <button type="submit">Subir</button>
                 </form>
+                <a href="#">Volver al panel</a>
             `;
 
+            // Agrega un manejador de eventos al formulario
             const uploadForm = document.getElementById('uploadForm');
             uploadForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const file = document.getElementById('fileInput').files[0];
-                const invoiceType = document.getElementById('invoiceType').value;
+                event.preventDefault(); // Previene el envío tradicional del formulario
+                const fileInput = document.getElementById('fileInput');
+                const file = fileInput.files[0];
 
-                if (file && invoiceType) {
+                if (file) {
                     const formData = new FormData();
                     formData.append('file', file);
-                    formData.append('type', invoiceType);
+                    formData.append('csrfmiddlewaretoken', getCSRFToken());
 
                     try {
-                        const response = await fetch('/upload-invoice', {
+                        const response = await fetch('/procesamiento/upload/', {
                             method: 'POST',
                             body: formData,
                         });
-                        const result = await response.json();
-                        alert(result.message || 'Archivo subido correctamente.');
+
+                        if (response.ok) {
+                            alert('Factura subida correctamente.');
+                            mainContent.innerHTML = '<p>La factura fue subida exitosamente. ¡Gracias!</p>';
+                        } else {
+                            alert('Error al subir la factura.');
+                        }
                     } catch (error) {
-                        alert('Error al subir el archivo.');
+                        console.error(error);
+                        alert('Ocurrió un error al intentar subir la factura.');
                     }
                 } else {
-                    alert('Por favor, complete todos los campos.');
+                    alert('Por favor, selecciona un archivo para subir.');
                 }
             });
         });
     }
 
+    // Función para obtener el CSRF token desde las cookies
+    function getCSRFToken() {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        return cookieValue || '';
+    }
+});
     // Botón Facturas con filtrado
     const viewInvoicesButton = document.getElementById('viewInvoices');
     if (viewInvoicesButton) {
