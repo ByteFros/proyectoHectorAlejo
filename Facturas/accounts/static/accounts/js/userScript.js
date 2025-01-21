@@ -76,6 +76,111 @@ document.addEventListener('DOMContentLoaded', () => {
         return cookieValue || '';
     }
 });
+
+    const profileButton = document.getElementById('profileButton');
+    profileButton.addEventListener('click', () => {
+        mainContent.innerHTML = `
+            <h2>Información del Perfil</h2>
+            <form id="profileForm">
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" id="username" value="${username}" readonly style="pointer-events: none;">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" value="usuario@ejemplo.com" required>
+
+                <label for="nif">NIF:</label>
+                <input type="text" id="nif" value="12345678X" readonly style="pointer-events: none;">
+
+                <label for="address">Dirección:</label>
+                <input type="text" id="address" value="Calle Falsa 123" readonly style="pointer-events: none;">
+
+                <label for="city">Población:</label>
+                <input type="text" id="city" value="Springfield" readonly style="pointer-events: none;">
+
+                <label for="postalCode">Código Postal:</label>
+                <input type="text" id="postalCode" value="28000" readonly style="pointer-events: none;">
+
+                <button type="submit">Actualizar Email</button>
+            </form>
+        `;
+
+        const emailField = document.getElementById('email');
+        emailField.removeAttribute('readonly');
+
+        const profileForm = document.getElementById('profileForm');
+        profileForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = emailField.value;
+
+            try {
+                const response = await fetch('/update-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Perfil actualizado correctamente.');
+                } else {
+                    alert(result.message || 'Error al actualizar el perfil.');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    });
+
+
+    // Botón Subir Factura
+    const uploadInvoiceButton = document.getElementById('uploadInvoice');
+    if (uploadInvoiceButton) {
+        uploadInvoiceButton.addEventListener('click', () => {
+            mainContent.innerHTML = `
+                <form id="uploadForm">
+                    <label for="fileInput">Seleccionar archivo:</label>
+                    <input type="file" id="fileInput" required>
+                    <label for="invoiceType">Tipo de factura:</label>
+                    <select id="invoiceType" required>
+                        <option value="" disabled selected>Seleccione un tipo</option>
+                        <option value="pagada">Pagada</option>
+                        <option value="cobrada">Cobrada</option>
+                    </select>
+                    <button type="submit">Subir</button>
+                </form>
+            `;
+
+            const uploadForm = document.getElementById('uploadForm');
+            uploadForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const file = document.getElementById('fileInput').files[0];
+                const invoiceType = document.getElementById('invoiceType').value;
+
+                if (file && invoiceType) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('type', invoiceType);
+
+                    try {
+                        const response = await fetch('/upload-invoice', {
+                            method: 'POST',
+                            body: formData,
+                        });
+                        const result = await response.json();
+                        alert(result.message || 'Archivo subido correctamente.');
+                    } catch (error) {
+                        alert('Error al subir el archivo.');
+                    }
+                } else {
+                    alert('Por favor, complete todos los campos.');
+                }
+            });
+        });
+    }
+
     // Botón Facturas con filtrado
     const viewInvoicesButton = document.getElementById('viewInvoices');
     if (viewInvoicesButton) {
@@ -131,50 +236,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-    // Botón Análisis
-    const analysisButton = document.getElementById('analysis');
-    if (analysisButton) {
-        analysisButton.addEventListener('click', async () => {
-            mainContent.innerHTML = '<div id="analysisContent"></div>';
-            const analysisContent = document.getElementById('analysisContent');
-            try {
-                const response = await fetch('/get-analysis');
-                const analysis = await response.json();
-                analysisContent.innerHTML = `
-                    <p>Total del Mes 1: ${analysis.month1}</p>
-                    <p>Total del Mes 2: ${analysis.month2}</p>
-                    <p>Total del Mes 3: ${analysis.month3}</p>
-                    <p>Total Trimestre: ${analysis.total}</p>
-                `;
-            } catch (error) {
-                alert('Error al obtener el análisis.');
-            }
-        });
-    }
-
-    // Botón Descargar Factura
-    const downloadInvoiceButton = document.getElementById('downloadInvoice');
-    if (downloadInvoiceButton) {
-        downloadInvoiceButton.addEventListener('click', async () => {
-            mainContent.innerHTML = '<ul id="downloadList"></ul>';
-            const downloadList = document.getElementById('downloadList');
-            try {
-                const response = await fetch('/get-invoices');
-                const invoices = await response.json();
-                invoices.forEach(invoice => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `<span>${invoice.name}</span> <button onclick="downloadInvoice('${invoice.id}')">Bajar</button>`;
-                    downloadList.appendChild(listItem);
-                });
-            } catch (error) {
-                alert('Error al obtener las facturas.');
-            }
-        });
-    }
-
-    // Función para descargar facturas
-    window.downloadInvoice = function (id) {
-        window.location.href = `/download-invoice/${id}`;
-    };
 });
