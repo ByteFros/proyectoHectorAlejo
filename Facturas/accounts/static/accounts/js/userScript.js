@@ -134,6 +134,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+
+    // Botón Subir Factura
+    const uploadInvoiceButton = document.getElementById('uploadInvoice');
+    if (uploadInvoiceButton) {
+        uploadInvoiceButton.addEventListener('click', () => {
+            mainContent.innerHTML = `
+                <form id="uploadForm">
+                    <label for="fileInput">Seleccionar archivo:</label>
+                    <input type="file" id="fileInput" required>
+                    <label for="invoiceType">Tipo de factura:</label>
+                    <select id="invoiceType" required>
+                        <option value="" disabled selected>Seleccione un tipo</option>
+                        <option value="pagada">Pagada</option>
+                        <option value="cobrada">Cobrada</option>
+                    </select>
+                    <button type="submit">Subir</button>
+                </form>
+            `;
+
+            const uploadForm = document.getElementById('uploadForm');
+            uploadForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const file = document.getElementById('fileInput').files[0];
+                const invoiceType = document.getElementById('invoiceType').value;
+
+                if (file && invoiceType) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('type', invoiceType);
+
+                    try {
+                        const response = await fetch('/upload-invoice', {
+                            method: 'POST',
+                            body: formData,
+                        });
+                        const result = await response.json();
+                        alert(result.message || 'Archivo subido correctamente.');
+                    } catch (error) {
+                        alert('Error al subir el archivo.');
+                    }
+                } else {
+                    alert('Por favor, complete todos los campos.');
+                }
+            });
+        });
+    }
+
     // Botón Facturas con filtrado
     const viewInvoicesButton = document.getElementById('viewInvoices');
     if (viewInvoicesButton) {
