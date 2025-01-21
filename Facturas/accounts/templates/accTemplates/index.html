@@ -8,20 +8,76 @@
     <link rel="stylesheet" href="{% static 'accounts/css/indexStyles.css' %}">
 </head>
 <body>
-    <div class="container" id="container">
-        <div class="header">Login</div>
-        <div class="form" id="form">
-            <form id="loginForm" method="POST" action="{% url 'login' %}">
-                {% csrf_token %}
-                <input type="text" id="username" name="username" placeholder="Username" required>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <button id="actionButton" type="submit">Log In</button>
-            </form>
-            <div class="toggle">
-                <button id="toggleButton" type="button">¿No tienes una cuenta?</button>
+<div class="container" id="container">
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    <div class="header" id="header">Login</div>
+    <div class="form" id="form">
+        <!-- Formulario de Login -->
+        <form id="loginForm" method="POST" action="{% url 'auth' %}">
+            {% csrf_token %}
+            <input type="hidden" name="loginForm" value="true">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <button id="actionButton" type="submit">Log In</button>
+        </form>
+
+        <!-- Formulario de Registro -->
+        <form id="registerForm" method="POST" action="{% url 'auth' %}" style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="registerForm" value="true">
+
+            <!-- Campo: Nombre de usuario -->
+            <div class="form-group">
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" id="username" name="username" placeholder="Nombre de usuario" required>
             </div>
+
+            <!-- Campo: Email -->
+            <div class="form-group">
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+            </div>
+
+            <!-- Campo: Contraseña -->
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" placeholder="Contraseña" required>
+            </div>
+
+            <!-- Campo: Confirmar contraseña -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar contraseña:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmar contraseña"
+                       required>
+            </div>
+
+            <button id="actionButton" type="submit">Sign Up</button>
+        </form>
+
+        <div class="toggle">
+            <button id="toggleButton" type="button">¿No tienes una cuenta?</button>
         </div>
     </div>
-    <script src="{% static 'accounts/js/index-scripts.js' %}"></script>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const toggleButton = document.getElementById('toggleButton');
+    const header = document.querySelector('.header');
+
+    let isLogin = true;
+
+    toggleButton.addEventListener('click', () => {
+        isLogin = !isLogin;
+        header.textContent = isLogin ? 'Login' : 'Register';
+        loginForm.style.display = isLogin ? 'block' : 'none';
+        registerForm.style.display = isLogin ? 'none' : 'block';
+    });
+</script>
 </body>
 </html>
