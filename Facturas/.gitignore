@@ -1,0 +1,48 @@
+# Byte-compiled files
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# Entornos virtuales
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+db.sqlite3
+*.sqlite3
+*/migrations/*.py
+!*/migrations/__init__.py
+staticfiles/
+static/
+media/
+
+# Configuración local
+.env
+*.env
+config/settings/local.py
+
+# Archivos del sistema operativo
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archivos de editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+*.log
+docker-compose.override.yml
