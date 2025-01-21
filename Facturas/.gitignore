@@ -1,5 +1,6 @@
 # Byte-compiled files
 *.py[cod]
+*.pyc
 __pycache__/
 *.so
 *.egg
