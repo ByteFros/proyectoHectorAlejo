@@ -1,4 +1,4 @@
- {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,25 +8,36 @@
     <title>Panel de Usuario</title>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 id="welcomeMessage">¡Bienvenid@, usuario!</h1>
-            <button id="logoutButton" class="logout">Logout</button>
-        </header>
-        <div class="content">
-            <aside class="menu">
-                <ul>
-                    <li><button id="homeButton">Inicio</button></li>
-                    <li><button id="profileButton">Perfil</button></li>
-                    <li><button id="uploadInvoice">Subir Factura</button></li>
-                    <li><button id="viewInvoices">Mis facturas</button></li>
-                </ul>
-            </aside>
-            <main id="main-content">
-            
-            </main>
-        </div>
+<div class="container">
+    <header>
+        <h1 id="welcomeMessage">¡Bienvenid@, usuario!</h1>
+        <button id="logoutButton" class="logout">Logout</button>
+        <form id="logoutForm" method="POST" action="{% url 'logout' %}" style="display: none;">
+            {% csrf_token %}
+        </form>
+    </header>
+    <div class="content">
+        <aside class="menu">
+            <ul>
+                <li>
+                    <button id="homeButton">Inicio</button>
+                </li>
+                <li>
+                    <button id="profileButton">Perfil</button>
+                </li>
+                <li>
+                    <button id="uploadInvoice">Subir Factura</button>
+                </li>
+                <li>
+                    <button id="viewInvoices">Mis facturas</button>
+                </li>
+            </ul>
+        </aside>
+        <main id="main-content">
+
+        </main>
     </div>
-    <script src="{% static 'accounts/js/userScript.js'%}"></script>
+</div>
+<script src="{% static 'accounts/js/user-script.js'%}"></script>
 </body>
 </html>

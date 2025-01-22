@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/indexStyles.css' %}">
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- Encabezado dinámico que cambia entre Login y Register -->
+        <div class="header" id="header">Login</div>
+
+        <div class="form" id="form">
+            <!-- Formulario de Login -->
+            <form id="loginForm" method="POST" action="{% url 'auth' %}" style="display: block;">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="login">
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <button id="actionButton" type="submit">Log In</button>
+            </form>
+
+            <!-- Formulario de Register -->
+            <form id="registerForm" method="POST" action="{% url 'auth' %}" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="register">
+                <input type="text" id="username" name="username" placeholder="Nombre de usuario" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="text" id="nif" name="nif" placeholder="NIF" required>
+                <input type="text" id="address" name="address" placeholder="Dirección" required>
+                <input type="text" id="city" name="city" placeholder="Ciudad" required>
+                <input type="text" id="postalCode" name="postalCode" placeholder="Código Postal" required>
+                <input type="password" id="password1" name="password1" placeholder="Password" required>
+                <input type="password" id="password2" name="password2" placeholder="Confirm Password" required>
+                <button id="actionButton" type="submit">Sign Up</button>
+            </form>
+
+            <!-- Botón para alternar entre Login y Register -->
+            <div class="toggle">
+                <button id="toggleButton" type="button">¿No tienes una cuenta?</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Alternar entre Login y Register
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const toggleButton = document.getElementById('toggleButton');
+        const header = document.getElementById('header');
+
+        let isLogin = true;
+
+        toggleButton.addEventListener('click', () => {
+            isLogin = !isLogin;
+            header.textContent = isLogin ? 'Login' : 'Register';
+
+            if (isLogin) {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                toggleButton.textContent = '¿No tienes una cuenta?';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                toggleButton.textContent = '¿Ya tienes una cuenta?';
+            }
+        });
+    </script>
+</body>
+</html>

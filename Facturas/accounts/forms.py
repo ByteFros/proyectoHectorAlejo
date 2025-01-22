@@ -3,17 +3,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(
-        required=True,
-        widget=forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-input'})
-    )
+    email = forms.EmailField(required=True)
+    nif = forms.CharField(max_length=50, required=True, label="NIF")
+    address = forms.CharField(max_length=255, required=True, label="Dirección")
+    city = forms.CharField(max_length=100, required=True, label="Ciudad")
+    postalCode = forms.CharField(max_length=20, required=True, label="Código Postal")
 
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
-        widgets = {
-            'username': forms.TextInput(attrs={'placeholder': 'Username', 'class': 'form-input'}),
-        }
+        fields = ('username', 'email', 'nif', 'address', 'city', 'postalCode', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

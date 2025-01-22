@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),  # Incluir las rutas de "accounts"
-    path('', lambda request: redirect('login')),  # Redirige a login
+    path('', lambda request: redirect('auth')),  # Redirige a login
     path('procesamiento/', include('procesamientoArchivos.urls')),  # Incluye las URLs de la app procesamientoArchivos
 ]
 
