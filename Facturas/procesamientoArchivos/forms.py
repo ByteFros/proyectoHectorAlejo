@@ -1,7 +1,7 @@
 from django import forms
 from .models import Invoice
 
-class InvoiceUploadForm(forms.ModelForm):
+class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['file']
+        fields = ['file', 'concepto', 'coste', 'formato']  # Incluir campos adicionales

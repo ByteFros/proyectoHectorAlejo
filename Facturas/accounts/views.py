@@ -28,13 +28,27 @@ def user_profile(request):
 def logout_confirm(request):
     return render(request, 'accTemplates/logoutConfirm.html')
 
+
 def auth_view(request):
     if request.method == 'POST':
-        form_type = request.POST.get('form_type')  # Saber si es login o registro
+        form_type = request.POST.get('form_type')
 
-        if form_type == 'login':  # Manejo de Login
+        if form_type == 'register':
+            register_form = CustomUserCreationForm(request.POST)
+            login_form = AuthenticationForm()  # Formulario vacío para el login
+            if register_form.is_valid():
+                try:
+                    register_form.save()
+                    messages.success(request, 'Usuario registrado con éxito. ¡Ahora puedes iniciar sesión!')
+                    return redirect('auth')
+                except ValidationError as e:
+                    messages.error(request, e.message)
+            else:
+                messages.error(request, 'Por favor, corrige los errores del formulario de registro.')
+
+        elif form_type == 'login':
             login_form = AuthenticationForm(data=request.POST)
-            register_form = CustomUserCreationForm()  # Formulario vacío de registro
+            register_form = CustomUserCreationForm()  # Formulario vacío para el registro
             if login_form.is_valid():
                 user = login_form.get_user()
                 login(request, user)
@@ -43,22 +57,12 @@ def auth_view(request):
             else:
                 messages.error(request, 'Usuario o contraseña incorrectos.')
 
-        elif form_type == 'register':  # Manejo de Registro
-            register_form = CustomUserCreationForm(request.POST)
-            login_form = AuthenticationForm()  # Formulario vacío de login
-            if register_form.is_valid():
-                register_form.save()
-                messages.success(request, 'Usuario registrado con éxito. ¡Ahora puedes iniciar sesión!')
-                return redirect('auth')
-            else:
-                messages.error(request, 'Por favor, corrige los errores del formulario de registro.')
-
-    else:  # Si es una solicitud GET
+    else:
         login_form = AuthenticationForm()
         register_form = CustomUserCreationForm()
 
     return render(request, 'accTemplates/auth.html', {
         'login_form': login_form,
         'register_form': register_form,
-        'isLogin': True  # Por defecto, mostramos el formulario de login
+        'isLogin': True
     })
