@@ -1,11 +1,13 @@
 # accounts/views.py
 from django.contrib import messages
 from django.contrib.auth import login
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.utils.timezone import now
 
 
 def register(request):
@@ -22,11 +24,36 @@ def register(request):
 
 @login_required
 def user_profile(request):
-    return render(request, 'accTemplates/userProfile.html')
+    user = request.user  # Usuario autenticado
+
+    if request.method == 'POST':
+        # Actualizar los campos del usuario
+        user.email = request.POST.get('email', user.email)
+        user.address = request.POST.get('address', user.address)
+        user.city = request.POST.get('city', user.city)
+        user.postalCode = request.POST.get('postalCode', user.postalCode)
+        user.save()
+
+        messages.success(request, 'Perfil actualizado correctamente.')
+        return redirect('user_profile')  # Redirigir para evitar reenvío del formulario
+
+    return render(request, 'accTemplates/userProfile.html', {
+        'user': user  # Pasar el usuario al contexto
+    })
 
 
-def logout_confirm(request):
-    return render(request, 'accTemplates/logoutConfirm.html')
+@login_required
+def get_user_profile(request):
+    user = request.user
+    data = {
+        'username': user.username,
+        'email': user.email,
+        'nif': user.nif,
+        'address': user.address,
+        'city': user.city,
+        'postalCode': user.postalCode,
+    }
+    return JsonResponse(data)
 
 
 def auth_view(request):
@@ -66,3 +93,8 @@ def auth_view(request):
         'register_form': register_form,
         'isLogin': True
     })
+
+
+
+def my_view(request):
+    return render(request, 'my_template.html', {'timestamp': int(now().timestamp())})
