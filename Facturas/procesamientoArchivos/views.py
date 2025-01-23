@@ -61,7 +61,7 @@ def get_invoices_json(request):
             'id': invoice.id,
             'concept': invoice.concepto,
             'cost': invoice.coste,
-            'format': invoice.formato,
+            'type': invoice.tipo_factura,
             'fileUrl': invoice.file.url,  # URL del archivo
             'uploadedAt': invoice.uploaded_at.strftime('%Y-%m-%d %H:%M:%S')  # Formato legible
         }

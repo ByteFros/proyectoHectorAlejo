@@ -2,17 +2,17 @@ from django.conf import settings
 from django.db import models
 
 class Invoice(models.Model):
-    FORMAT_CHOICES = [
-        ('number', 'Número'),
-        ('currency', 'Moneda'),
+    TIPO_FACTURA_CHOICES = [
+        ('cobrada', 'Cobrada'),
+        ('pagada', 'Pagada'),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     file = models.FileField(upload_to='invoices/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    concepto = models.CharField(max_length=255, default='Concepto no declarado por el usuario alalala')  # Campo para el concepto
-    coste = models.DecimalField(max_digits=10, decimal_places=2,default = 0.00)  # Costo de la factura
-    formato = models.CharField(max_length=10, choices=FORMAT_CHOICES, default='currency')  # Número o Moneda
+    concepto = models.CharField(max_length=255, default='Concepto no declarado por el usuario alalala')
+    coste = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    tipo_factura = models.CharField(max_length=10, choices=TIPO_FACTURA_CHOICES, default='pagada')  # Cambiado de 'formato' a 'tipo_factura'
 
     def __str__(self):
         return f"Factura de {self.user.username} | Concepto: {self.concepto} | Subida el {self.uploaded_at}"

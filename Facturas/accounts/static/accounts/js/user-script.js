@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-
 // Botón Subir Factura
 if (uploadInvoiceButton) {
     uploadInvoiceButton.addEventListener('click', () => {
@@ -50,10 +49,10 @@ if (uploadInvoiceButton) {
                 <label for="coste">Coste (€):</label>
                 <input type="number" id="coste" name="coste" step="0.01" required>
 
-                <label for="formato">Formato:</label>
-                <select id="formato" name="formato" required>
-                    <option value="number">Número</option>
-                    <option value="currency">Moneda</option>
+                <label for="tipo_factura">Tipo de Factura:</label>
+                <select id="tipo_factura" name="tipo_factura" required>
+                    <option value="cobrada">Cobrada</option>
+                    <option value="pagada">Pagada</option>
                 </select>
 
                 <label for="fileInput">Seleccionar archivo:</label>
@@ -72,15 +71,15 @@ if (uploadInvoiceButton) {
                 const fileInput = document.getElementById('fileInput');
                 const concepto = document.getElementById('concepto').value;
                 const coste = document.getElementById('coste').value;
-                const formato = document.getElementById('formato').value;
+                const tipoFactura = document.getElementById('tipo_factura').value; // Cambiado de 'formato' a 'tipo_factura'
                 const file = fileInput.files[0];
 
-                if (file && concepto && coste && formato) {
+                if (file && concepto && coste && tipoFactura) {
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('concepto', concepto);
                     formData.append('coste', coste);
-                    formData.append('formato', formato);
+                    formData.append('tipo_factura', tipoFactura); // Cambiado de 'formato' a 'tipo_factura'
                     formData.append('csrfmiddlewaretoken', getCSRFToken());
 
                     try {
@@ -109,6 +108,8 @@ if (uploadInvoiceButton) {
         }
     });
 }
+
+
     // Botón Perfil
     if (profileButton) {
         profileButton.addEventListener('click', async () => {
@@ -215,7 +216,7 @@ if (viewInvoicesButton) {
                 row.innerHTML = `
                     <td>${invoice.concept}</td>
                     <td>${parseFloat(invoice.cost).toFixed(2)}</td>
-                    <td>${invoice.format === 'currency' ? 'Moneda' : 'Número'}</td>
+                    <td>${invoice.format === 'cobrada' ? 'Cobrada' : 'Pagada'}</td>
                     <td><a href="${invoice.fileUrl}" target="_blank">Ver archivo</a></td>
                 `;
                 invoiceTableBody.appendChild(row);
