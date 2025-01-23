@@ -46,3 +46,25 @@ def list_invoices(request):
     # Obtén todas las facturas del usuario actual, ordenadas por concepto y fecha
     invoices = Invoice.objects.filter(user=request.user).order_by('concepto', '-uploaded_at')
     return render(request, 'procesamientoArchivos/listadoDescargas.html', {'invoices': invoices})
+
+
+from django.core.serializers import serialize
+
+@login_required
+def get_invoices_json(request):
+    """
+    Devuelve las facturas del usuario actual en formato JSON.
+    """
+    invoices = Invoice.objects.filter(user=request.user).order_by('concepto', '-uploaded_at')
+    invoice_list = [
+        {
+            'id': invoice.id,
+            'concept': invoice.concepto,
+            'cost': invoice.coste,
+            'format': invoice.formato,
+            'fileUrl': invoice.file.url,  # URL del archivo
+            'uploadedAt': invoice.uploaded_at.strftime('%Y-%m-%d %H:%M:%S')  # Formato legible
+        }
+        for invoice in invoices
+    ]
+    return JsonResponse(invoice_list, safe=False)
