@@ -5,7 +5,6 @@ console.log('Script cargado correctamente.');
 console.log('Script cargado correctamente.');
 document.addEventListener('DOMContentLoaded', () => {
     // Variables comunes
-    const welcomeMessage = document.getElementById('welcomeMessage');
     const mainContent = document.getElementById('main-content');
     const logoutButton = document.getElementById('logoutButton');
     const logoutForm = document.getElementById('logoutForm');
@@ -13,12 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewInvoicesButton = document.getElementById('viewInvoices');
     const profileButton = document.getElementById('profileButton');
     const username = localStorage.getItem('username') || 'usuario';
-
-    // Mostrar mensaje de bienvenida
-    if (welcomeMessage) {
-        welcomeMessage.textContent = `¡Bienvenid@, ${username}!`;
-    }
-
 
 
     // Lógica de Logout

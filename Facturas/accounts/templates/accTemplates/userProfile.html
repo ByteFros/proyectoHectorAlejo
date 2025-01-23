@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <header>
-        <h1 id="welcomeMessage">¡Bienvenid@, usuario!</h1>
+        <h1 id="welcomeMessage">¡Bienvenid@, {{ user.username }}!</h1>
         <button id="logoutButton" class="logout">Logout</button>
         <form id="logoutForm" method="POST" action="{% url 'logout' %}" style="display: none;">
             {% csrf_token %}
