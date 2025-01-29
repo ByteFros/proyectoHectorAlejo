@@ -1,8 +1,5 @@
 console.log('Script cargado correctamente.');
-console.log('Script cargado correctamente.');
-console.log('Script cargado correctamente.');
-console.log('Script cargado correctamente.');
-console.log('Script cargado correctamente.');
+
 document.addEventListener('DOMContentLoaded', () => {
     // Variables comunes
     const mainContent = document.getElementById('main-content');
@@ -80,6 +77,8 @@ if (uploadInvoiceButton) {
                             method: 'POST',
                             body: formData,
                         });
+
+
 
                         if (response.ok) {
                             alert('Factura subida correctamente.');
@@ -176,8 +175,9 @@ if (viewInvoicesButton) {
                     <tr>
                         <th>Concepto</th>
                         <th>Costo</th>
-                        <th>Formato</th>
+                        <th>Tipo de Factura</th>
                         <th>Archivo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="invoiceTableBody">
@@ -191,11 +191,13 @@ if (viewInvoicesButton) {
         try {
             // Llamada al endpoint que devuelve el JSON
             const response = await fetch('/procesamiento/invoices/');
+
             if (!response.ok) {
                 throw new Error('Error al cargar las facturas.');
             }
 
             const invoices = await response.json();
+            console.log(invoices);
 
             // Verificar si hay datos en el JSON
             if (invoices.length === 0) {
@@ -209,10 +211,41 @@ if (viewInvoicesButton) {
                 row.innerHTML = `
                     <td>${invoice.concept}</td>
                     <td>${parseFloat(invoice.cost).toFixed(2)}</td>
-                    <td>${invoice.format === 'cobrada' ? 'Cobrada' : 'Pagada'}</td>
+                    <td>${invoice.type === 'cobrada' ? 'Cobrada' : 'Pagada'}</td>
                     <td><a href="${invoice.fileUrl}" target="_blank">Ver archivo</a></td>
+                    <td><button class="delete-invoice" data-id="${invoice.id}">Eliminar</button></td>
                 `;
                 invoiceTableBody.appendChild(row);
+            });
+
+             document.addEventListener('click', async (event) => {
+                if (event.target.classList.contains('delete-invoice')) {
+                    const invoiceId = event.target.getAttribute('data-id');
+
+                    // Confirmación antes de eliminar
+                    const confirmDelete = confirm('¿Estás seguro de que deseas eliminar esta factura?');
+                    if (!confirmDelete) return;
+
+                    try {
+                        const response = await fetch(`/procesamiento/invoices/${invoiceId}/delete/`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRFToken': getCSRFToken(), // Token CSRF
+                            },
+                        });
+
+                        if (response.ok) {
+                            alert('Factura eliminada correctamente.');
+                            event.target.closest('tr').remove(); // Eliminar la fila de la tabla
+                        } else {
+                            const errorData = await response.json();
+                            alert(`Error al eliminar la factura: ${errorData.error || 'Intente nuevamente.'}`);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Ocurrió un error al intentar eliminar la factura.');
+                    }
+                }
             });
         } catch (error) {
             alert('Error al cargar las facturas.');

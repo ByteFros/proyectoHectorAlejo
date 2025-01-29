@@ -25,7 +25,7 @@ header {
     padding: 20px;
     background: #00a3d5;
     color: white;
-    position: relative; 
+    position: relative;
 }
 
 .logout {
@@ -33,7 +33,7 @@ header {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    background: #56c596; 
+    background: #56c596;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -46,7 +46,7 @@ header {
     background: #3fa376;
 }
 
-h1#welcomeMessage{
+h1#welcomeMessage {
     margin: 0;
     font-size: 24px;
 }
@@ -85,17 +85,17 @@ h1#welcomeMessage{
 }
 
 .main-content {
-    width: 80%;
-    padding: 20px 30px;
-    margin-left: 20px;
-    overflow-y: auto; 
+    width: 60%;
+    height: 100vh;
+    margin-left: 150px;
+    overflow-y: auto;
     box-sizing: border-box;
 }
 
 .content {
-    display: flex; 
+    display: flex;
     height: calc(90vh - 80px);
-    gap : 20px;
+    gap: 20px;
 }
 
 form {
@@ -129,8 +129,8 @@ form button:hover {
 .filter-container {
     display: flex;
     justify-content: flex-end;
-    align-items: center; 
-    margin-bottom: 20px; 
+    align-items: center;
+    margin-bottom: 20px;
     box-sizing: border-box;
 }
 
@@ -147,5 +147,283 @@ form button:hover {
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #fff;
+}
+
+#expenseChart, #earningChart {
+    width: 100%;
+    height: 400px;
+}
+
+.charts-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.charts-container canvas {
+    flex: 1 1 calc(45% - 20px); /* Ocupa un 45% del ancho con un margen */
+    max-width: 500px; /* Máximo ancho para evitar gráficos gigantes */
+}
+
+/* Estilos para el popup */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+}
+
+.popup-content h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.popup-buttons button {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.popup-buttons button[type="submit"] {
+    background: #00a3d5;
+    color: white;
+}
+
+.popup-buttons button[type="submit"]:hover {
+    background: #007af4;
+}
+
+.popup-buttons button[type="button"] {
+    background: #56c596;
+    color: white;
+}
+
+.popup-buttons button[type="button"]:hover {
+    background: #3fa376;
+}
+
+/* Estilos para la sección de facturas */
+.invoice-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.upload-btn {
+    align-self: flex-start;
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #00a3d5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.upload-btn:hover {
+    background: #007af4;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.invoice-table th, .invoice-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.invoice-table th {
+    background: #00a3d5;
+    color: white;
+    font-weight: bold;
+}
+
+.invoice-table tr:nth-child(even) {
+    background: #f4f4f9;
+}
+
+.invoice-table tr:hover {
+    background: #ddd;
+}
+
+/* Estilos para los botones de acciones */
+.action-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-btn.show {
+    background-color: #4CAF50; /* Verde para mostrar */
+}
+
+.action-btn.show:hover {
+    background-color: #45A049;
+}
+
+.action-btn.download {
+    background-color: #2196F3; /* Azul para descargar */
+}
+
+.action-btn.download:hover {
+    background-color: #0b7dda;
+}
+
+.action-btn.delete {
+    background-color: #f44336; /* Rojo para eliminar */
+}
+
+.action-btn.delete:hover {
+    background-color: #d32f2f;
+}
+
+/* Botón de descargar resumen */
+#downloadCSV {
+    display: inline-block;
+    margin-top: 20px;
+    background-color: #56c596;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+#downloadCSV:hover {
+    background-color: #3fa376;
+}
+
+input[type="file"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* Estilos para tablas adicionales */
+.totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.totals-table th, .totals-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.totals-table th {
+    background-color: #00a3d5;
+    color: white;
+    font-weight: bold;
+}
+
+.totals-table tr:nth-child(even) {
+    background-color: #f4f4f9;
+}
+
+.totals-table tr:hover {
+    background-color: #ddd;
+}
+
+/* Media Queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    .container {
+        width: 95%; /* Reducir el ancho */
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .menu ul {
+        flex-direction: column;
+    }
+
+    .menu ul li button {
+        width: 100%; /* Botones ocupan todo el ancho */
+    }
+
+    .invoice-table th {
+        position: sticky;
+        top: 0;
+        background-color: #00a3d5;
+        z-index: 10;
+    }
+
+    .invoice-table, .totals-table {
+        font-size: 14px; /* Reducir el tamaño del texto */
+    }
+
+    .invoice-table th, .invoice-table td, .totals-table th, .totals-table td {
+        padding: 8px; /* Reducir espacio */
+    }
+
+    .upload-btn {
+        width: 100%; /* Botón de subir factura ocupa todo el ancho */
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logout {
+        position: static;
+        margin-top: 10px;
+    }
+
+    h1#welcomeMessage {
+        font-size: 20px;
+    }
+
+    .charts-container {
+        flex-direction: column;
+    }
 }
 
