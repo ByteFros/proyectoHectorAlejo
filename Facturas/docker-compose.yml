@@ -5,7 +5,8 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-      - ./db.sqlite3:/app/db.sqlite3  # Volumen para persistencia de SQLite
+      - /app/__pycache__/  # Evita problemas de caché de Python
+      - ./dbData/db.sqlite3:/app/db.sqlite3
     environment:
       - DEBUG=True
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
