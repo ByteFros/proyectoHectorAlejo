@@ -17,8 +17,7 @@ env.bak/
 venv.bak/
 
 # Django
-
-*/migrations/*.py
+*/migrations/*.pyc
 !*/migrations/__init__.py
 staticfiles/
 
