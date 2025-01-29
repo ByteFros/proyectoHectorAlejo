@@ -19,43 +19,54 @@ const setupProfileButton = () => {
             // Actualiza el contenido del contenedor con los datos del perfil
             profileContent.innerHTML = `
                 <h2>Información del Perfil</h2>
-            <form id="profileForm">
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" value="${userData.username}" readonly>
+                <form id="profileForm">
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" value="${userData.username}" readonly>
 
-                <label for="email">Correo electrónico:</label>
-                <input type="email" id="email" value="${userData.email}" required>
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" id="email" value="${userData.email}" required>
 
-                <label for="nif">NIF:</label>
-                <input type="text" id="nif" value="${userData.nif}" readonly>
+                    <label for="nif">NIF:</label>
+                    <input type="text" id="nif" value="${userData.nif}" readonly>
 
-                <label for="address">Dirección:</label>
-                <input type="text" id="address" value="${userData.address}" required>
+                    <label for="address">Dirección:</label>
+                    <input type="text" id="address" value="${userData.address}" required>
 
-                <label for="city">Ciudad:</label>
-                <input type="text" id="city" value="${userData.city}" required>
+                    <label for="city">Ciudad:</label>
+                    <input type="text" id="city" value="${userData.city}" required>
 
-                <label for="postalCode">Código Postal:</label>
-                <input type="text" id="postalCode" value="${userData.postalCode}" required>
+                    <label for="postalCode">Código Postal:</label>
+                    <input type="text" id="postalCode" value="${userData.postalCode}" required>
 
-                <button type="submit">Actualizar</button>
-            </form>
+                    <button type="submit">Actualizar</button>
+                </form>
             `;
 
-            // Configurar el evento para enviar el formulario
+            // Evento para enviar el formulario
             const profileForm = document.getElementById('profileForm');
             profileForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                const formData = new FormData(profileForm);
+                const formData = {
+                    email: document.getElementById('email').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    postalCode: document.getElementById('postalCode').value
+                };
 
                 try {
                     const response = await fetch('/accounts/profile/', {
                         method: 'POST',
-                        body: formData,
+                        body: JSON.stringify(formData),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCSRFToken(),  // Se envía el token CSRF
+                        },
+                        credentials: 'same-origin'
                     });
 
-                    if (!response.ok) throw new Error('Error al actualizar el perfil.');
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.error || 'Error al actualizar el perfil.');
 
                     alert('Perfil actualizado correctamente.');
                 } catch (error) {
@@ -63,6 +74,7 @@ const setupProfileButton = () => {
                     console.error(error);
                 }
             });
+
         } catch (error) {
             alert('Error al cargar el perfil.');
             console.error(error);
@@ -76,4 +88,13 @@ const setupProfileButton = () => {
     } else {
         console.error('El botón del perfil no se encontró en el DOM.');
     }
+};
+
+// Función global para obtener el token CSRF
+const getCSRFToken = () => {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    return cookieValue || '';
 };

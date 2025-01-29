@@ -21,17 +21,26 @@ const setupHomeButton = () => {
 
         try {
             const response = await fetch('/procesamiento/invoices/');
-            const invoices = await response.json();
+            const { invoices, totals } = await response.json(); // Extraer correctamente
+
+            if (!Array.isArray(invoices)) {
+                throw new Error("La respuesta del servidor no contiene un array de facturas.");
+            }
 
             const data = processInvoicesForChart(invoices);
             renderChart(financeChart, data);
 
             const ivaNet = calculateIvaNet(data);
-            ivaSummary.textContent = `Resumen IVA: ${ivaNet > 0 ? `A pagar: ${ivaNet}` : `A devolver: ${Math.abs(ivaNet)}`}`;
+ivaSummary.textContent = `
+    Total Cobradas: ${(parseFloat(totals.cobradas) || 0).toFixed(2)}€ -
+    Total Pagadas: ${(parseFloat(totals.pagadas) || 0).toFixed(2)}€ |
+    IVA Neto: ${ivaNet > 0 ? `A pagar: ${ivaNet.toFixed(2)}` : `A devolver: ${Math.abs(ivaNet).toFixed(2)}`}
+`;
 
             setupDownloadCSVButton(invoices);
         } catch (error) {
             console.error('Error al cargar las facturas:', error);
+            ivaSummary.textContent = 'Error al obtener datos.';
         }
     };
 
@@ -47,13 +56,13 @@ const processInvoicesForChart = (invoices) => {
     };
 
     invoices.forEach((invoice) => {
-        const month = new Date(invoice.paymentDate).getMonth(); // Suponiendo que `paymentDate` está disponible
+        const month = new Date(invoice.uploadedAt).getMonth();
         const cost = parseFloat(invoice.cost);
-        const iva = cost * 0.21; // IVA del 21%
+        const iva = cost * 0.21; // Cálculo del IVA en el frontend
 
-        if (invoice.type === 'recibida') {
+        if (invoice.type === 'pagada') {
             data.expenses[month] += cost + iva;
-        } else if (invoice.type === 'emitida') {
+        } else if (invoice.type === 'cobrada') {
             data.incomes[month] += cost + iva;
         }
     });

@@ -8,6 +8,7 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.utils.timezone import now
+import json
 
 
 def register(request):
@@ -21,26 +22,23 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'accTemplates/register.html', {'form': form})
 
-
 @login_required
 def user_profile(request):
-    user = request.user  # Usuario autenticado
+    user = request.user
 
     if request.method == 'POST':
-        # Actualizar los campos del usuario
-        user.email = request.POST.get('email', user.email)
-        user.address = request.POST.get('address', user.address)
-        user.city = request.POST.get('city', user.city)
-        user.postalCode = request.POST.get('postalCode', user.postalCode)
-        user.save()
+        try:
+            data = json.loads(request.body)  # Leer JSON del request
+            user.email = data.get('email', user.email)
+            user.address = data.get('address', user.address)
+            user.city = data.get('city', user.city)
+            user.postalCode = data.get('postalCode', user.postalCode)
+            user.save()
+            return JsonResponse({'message': 'Perfil actualizado correctamente.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Solicitud inválida.'}, status=400)
 
-        messages.success(request, 'Perfil actualizado correctamente.')
-        return redirect('user_profile')  # Redirigir para evitar reenvío del formulario
-
-    return render(request, 'accTemplates/userProfile.html', {
-        'user': user  # Pasar el usuario al contexto
-    })
-
+    return render(request, 'accTemplates/userProfile.html', {'user': user})
 
 @login_required
 def get_user_profile(request):
