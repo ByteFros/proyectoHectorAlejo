@@ -130,7 +130,7 @@ form button:hover {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     box-sizing: border-box;
 }
 
@@ -250,10 +250,26 @@ form button:hover {
     background: #007af4;
 }
 
+.invoice-section {
+    max-height: 350px; /* Ajusta según sea necesario */
+    overflow-y: auto;  /* Habilita el scroll si hay muchas facturas */
+    position: relative; /* Para que la cabecera se mantenga dentro del div */
+    border: 1px solid #ddd;
+}
+
 .invoice-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+}
+
+.invoice-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.invoice-table th {
+    border-bottom: 2px;
 }
 
 .invoice-table th, .invoice-table td {
@@ -268,6 +284,12 @@ form button:hover {
     font-weight: bold;
 }
 
+.invoice-section thead tr{
+    margin: 0;
+    padding: 0;
+    height: 40px;
+}
+
 .invoice-table tr:nth-child(even) {
     background: #f4f4f9;
 }
@@ -275,6 +297,15 @@ form button:hover {
 .invoice-table tr:hover {
     background: #ddd;
 }
+
+.totals-table {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 10;
+    width: 100%;
+}
+
 
 /* Estilos para los botones de acciones */
 .action-btn {
