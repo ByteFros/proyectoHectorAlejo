@@ -72,6 +72,36 @@ const setupHomeButton = () => {
     loadHomeContent(); // Cargar al inicio
 };
 
+const setupDownloadCSVButton = (invoices) => {
+    const downloadButton = document.getElementById('downloadCSV');
+    if (!downloadButton) return;
+
+    downloadButton.addEventListener('click', () => {
+        if (!invoices || invoices.length === 0) {
+            alert('No hay facturas disponibles para exportar.');
+            return;
+        }
+
+        let csvContent = 'Tipo,Fecha,Costo,IVA Total\n';
+        invoices.forEach(invoice => {
+            const date = new Date(invoice.uploadedAt).toLocaleDateString('es-ES');
+            const cost = parseFloat(invoice.cost).toFixed(2);
+            const iva = (cost * 0.21).toFixed(2);
+            csvContent += `${invoice.type},${date},${cost} €,${iva} €\n`;
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'resumen_facturas.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+};
+
+
 // 📌 Función para calcular IVA Cobrado, IVA Pagado, IVA Total y IVA a Devolver
 const calculateIvaNet = (totals) => {
     if (!totals || typeof totals.cobradas === 'undefined' || typeof totals.pagadas === 'undefined') {
