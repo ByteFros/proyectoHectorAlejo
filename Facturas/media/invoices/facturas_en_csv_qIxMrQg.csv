@@ -1,0 +1,5 @@
+Numero de Factura,Fecha,Cliente,RUC/Cedula,Direccion,Cantidad,Descripcion,Precio Unitario,Total,Subtotal,IVA,Total a Pagar,Forma de Pago,Vendedor,Notas
+00123,10/10/2023,Juan Pérez,1234567890,"Calle Falsa 123, Ciudad, País",2,Lápices HB,1.5,3.0,26.5,3.18,29.68,Tarjeta de crédito,María Gómez,Gracias por su compra.
+00123,10/10/2023,Juan Pérez,1234567890,"Calle Falsa 123, Ciudad, País",5,Cuadernos A4,4.0,20.0,,,,,,
+00123,10/10/2023,Juan Pérez,1234567890,"Calle Falsa 123, Ciudad, País",1,Bolígrafo Azul,2.0,2.0,,,,,,
+00123,10/10/2023,Juan Pérez,1234567890,"Calle Falsa 123, Ciudad, País",3,Gomas de borrar,0.5,1.5,,,,,,

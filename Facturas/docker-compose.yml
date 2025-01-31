@@ -4,9 +4,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
-      - /app/__pycache__/  # Evita problemas de caché de Python
-      - ./dbData/db.sqlite3:/app/db.sqlite3
+      - .:/app  # Monta todo el proyecto en /app
+      - ./dbData:/app/dbData  # Monta la carpeta dbData en /app/dbData
     environment:
       - DEBUG=True
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
