@@ -82,6 +82,8 @@ def delete_invoice(request, invoice_id):
         return JsonResponse({'error': 'Factura no encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
 @login_required
 def list_user_invoices(request):
     """
