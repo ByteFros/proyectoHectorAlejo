@@ -10,28 +10,32 @@ const setupHomeButton = () => {
         profileContent.style.display = 'none';
 
         homeContent.innerHTML = `
-            <h2>Resumen de Gasto y Cobro</h2>
             <canvas id="financeChart" width="400" height="200"></canvas>
             <button id="downloadCSV">Descargar Resumen (CSV)</button>
-            <table class="totals-table">
-            <thead>
-                <tr>
-                    <th>Total Cobradas</th>
-                    <th>Total Pagadas</th>
-                    <th>IVA Neto</th>
-                    <th>IVA a Pagar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td id="totalCobradas">0.00€</td>
-                    <td id="totalPagadas">0.00€</td>
-                    <td id="ivaNeto">0.00€</td>
-                    <td id="ivaPagar">0.00€</td>
-                </tr>
-            </tbody>
-        </table>
-
+            <div class="table-container">
+                <table class="totals-table">
+                    <thead>
+                        <tr>
+                            <th>Total Cobrado</th>
+                            <th>Total Pagado</th>
+                            <th>IVA Cobrado</th>
+                            <th>IVA Pagado</th>
+                            <th>IVA Total</th>
+                            <th>IVA a Devolver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="totalCobradas">0.00€</td>
+                            <td id="totalPagadas">0.00€</td>
+                            <td id="ivaCobrado">0.00€</td>
+                            <td id="ivaPagado">0.00€</td>
+                            <td id="ivaTotal">0.00€</td>
+                            <td id="ivaDevolver">0.00€</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         `;
 
         const financeChart = document.getElementById('financeChart');
@@ -44,15 +48,19 @@ const setupHomeButton = () => {
                 throw new Error("La respuesta del servidor no contiene datos válidos.");
             }
 
+            // Generar datos para el gráfico 📊
             const data = processInvoicesForChart(invoices);
             renderChart(financeChart, data);
 
-            // Calcular IVA Neto y actualizar la tabla de totales
-            const ivaNet = calculateIvaNet(totals);
+            // Calcular y actualizar la tabla
+            const ivaResults = calculateIvaNet(totals);
+
             document.getElementById('totalCobradas').textContent = `${parseFloat(totals.cobradas || 0).toFixed(2)} €`;
             document.getElementById('totalPagadas').textContent = `${parseFloat(totals.pagadas || 0).toFixed(2)} €`;
-            document.getElementById('ivaNeto').textContent = `${ivaNet.toFixed(2)} €`;
-            document.getElementById('ivaPagar').textContent = `${ivaNet > 0 ? ivaNet.toFixed(2) : "0.00"} €`;
+            document.getElementById('ivaCobrado').textContent = `${ivaResults.ivaCobrado} €`;
+            document.getElementById('ivaPagado').textContent = `${ivaResults.ivaPagado} €`;
+            document.getElementById('ivaTotal').textContent = `${ivaResults.ivaTotal} €`;
+            document.getElementById('ivaDevolver').textContent = `${ivaResults.ivaDevolver} €`;
 
             setupDownloadCSVButton(invoices);
         } catch (error) {
@@ -64,20 +72,41 @@ const setupHomeButton = () => {
     loadHomeContent(); // Cargar al inicio
 };
 
+// 📌 Función para calcular IVA Cobrado, IVA Pagado, IVA Total y IVA a Devolver
 const calculateIvaNet = (totals) => {
     if (!totals || typeof totals.cobradas === 'undefined' || typeof totals.pagadas === 'undefined') {
-        return 0;
+        return {
+            ivaCobrado: "0.00",
+            ivaPagado: "0.00",
+            ivaTotal: "0.00",
+            ivaDevolver: "0.00"
+        };
     }
+
+    const ivaRate = 0.21; // Tasa de IVA
 
     const totalCobradas = parseFloat(totals.cobradas) || 0;
     const totalPagadas = parseFloat(totals.pagadas) || 0;
 
-    const ivaCobro = totalCobradas * 0.21;
-    const ivaGasto = totalPagadas * 0.21;
+    // Calcular el IVA Cobrado y Pagado
+    const ivaCobrado = totalCobradas * ivaRate;
+    const ivaPagado = totalPagadas * ivaRate;
 
-    return ivaCobro - ivaGasto;
+    // IVA Total: Diferencia entre el IVA cobrado y pagado
+    const ivaTotal = ivaCobrado - ivaPagado;
+
+    // IVA a devolver si el resultado es negativo
+    const ivaDevolver = ivaTotal < 0 ? Math.abs(ivaTotal) : 0;
+
+    return {
+        ivaCobrado: ivaCobrado.toFixed(2),
+        ivaPagado: ivaPagado.toFixed(2),
+        ivaTotal: ivaTotal.toFixed(2),
+        ivaDevolver: ivaDevolver.toFixed(2)
+    };
 };
 
+// 📊 Función para procesar los datos de las facturas para el gráfico
 const processInvoicesForChart = (invoices) => {
     const data = {
         months: Array(12).fill(0).map((_, i) => new Date(0, i).toLocaleString('es-ES', { month: 'long' })),
@@ -100,6 +129,7 @@ const processInvoicesForChart = (invoices) => {
     return data;
 };
 
+// 📊 Función para generar el gráfico con Chart.js
 const renderChart = (canvas, data) => {
     new Chart(canvas, {
         type: 'bar',
@@ -135,35 +165,4 @@ const renderChart = (canvas, data) => {
             },
         },
     });
-};
-
-const setupDownloadCSVButton = (invoices) => {
-    const button = document.getElementById('downloadCSV');
-    button.addEventListener('click', () => {
-        const csvContent = generateCSVContent(invoices);
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', 'resumen_facturas.csv');
-        link.click();
-    });
-};
-
-const generateCSVContent = (invoices, ivaNet) => {
-    const headers = ['Concepto', 'Costo', 'IVA', 'Tipo'];
-    const rows = invoices.map((invoice) => {
-        const cost = parseFloat(invoice.cost);
-        const iva = cost * 0.21;
-        return [
-            invoice.concept,
-            cost.toFixed(2),
-            iva.toFixed(2),
-            invoice.type,
-        ].join(',');
-    });
-
-    // Agregar fila con el IVA Neto y a Pagar al final del CSV
-    rows.push(['',])
-
-    return [headers.join(','), ...rows].join('\n');
 };

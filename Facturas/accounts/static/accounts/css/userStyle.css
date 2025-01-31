@@ -10,7 +10,7 @@ body {
 }
 
 .container {
-    width: 80%;
+    width: 100%;
     max-width: 1200px;
     background: #fff;
     border-radius: 8px;
@@ -85,9 +85,9 @@ h1#welcomeMessage {
 }
 
 .main-content {
-    width: 60%;
-    height: 100vh;
-    margin-left: 150px;
+    width: 65%;
+    height: 80vh;
+    margin-left: 130px;
     overflow-y: auto;
     box-sizing: border-box;
 }
@@ -155,16 +155,43 @@ form button:hover {
 }
 
 .charts-container {
+    margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
     justify-content: center;
     align-items: flex-start;
+    padding-top: 30px;
 }
 
 .charts-container canvas {
-    flex: 1 1 calc(45% - 20px); /* Ocupa un 45% del ancho con un margen */
-    max-width: 500px; /* Máximo ancho para evitar gráficos gigantes */
+    flex: 1 1 calc(50% - 20px); /* Ocupa un 45% del ancho con un margen */
+    max-width: 800px; /* Máximo ancho para evitar gráficos gigantes */
+}
+
+/* Estilos para el perfil */
+.profile {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+#h2 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.profile-container{
+    padding-top: 20px;
+    padding-left: 130px;
+    width: 70%;
+    height: 70vh;
+    max-width: 400px;
+}
+
+#label.username, #label.email, #label.nif, #label.address, #label.city, #label.postalCode {
+    font-size: 12px;
 }
 
 /* Estilos para el popup */
@@ -298,40 +325,49 @@ form button:hover {
     background: #ddd;
 }
 
-.totals-table {
-    position: sticky;
-    bottom: 0;
-    background-color: white;
-    z-index: 10;
-    width: 100%;
+/* Contenedor para evitar que la tabla se expanda más de lo necesario */
+.table-container {
+    width: 100%;  /* Ajusta el ancho según sea necesario */
+    max-width: 1000px;  /* Evita que la tabla sea demasiado grande */
+    margin: auto;
+    overflow-x: auto;  /* Agrega desplazamiento horizontal en pantallas pequeñas */
 }
 
+/* 🔹 Mejora el diseño de la tabla */
 .totals-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
     background-color: white;
     border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
+/* 🔹 Cabecera con color de fondo */
 .totals-table thead {
     background-color: #007bff;
     color: white;
     font-weight: bold;
 }
 
+/* 🔹 Ajustar tamaño de las celdas para evitar deformaciones */
 .totals-table th, .totals-table td {
-    padding: 10px;
+    padding: 2px;
     border: 1px solid #ddd;
     text-align: center;
+    min-width: 100px; /* Reducido de 150px a 100px para evitar que la tabla sea muy ancha */
+    white-space: nowrap; /* Evita que los textos largos se dividan en varias líneas */
 }
 
-/* 🔹 Ajusta el tamaño de las columnas para que no se deforme */
-.totals-table th, .totals-table td {
-    min-width: 150px;
+/* 🔹 Mantener la tabla visible en la parte inferior (opcional) */
+.totals-table {
+    position: relative; /* Se cambió de sticky a relative para evitar que flote */
+    bottom: auto;
+    z-index: 10;
+    background-color: white;
 }
+
 
 /* Estilos para los botones de acciones */
 .action-btn {

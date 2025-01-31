@@ -18,28 +18,29 @@ const setupProfileButton = () => {
 
             // Actualiza el contenido del contenedor con los datos del perfil
             profileContent.innerHTML = `
-                <h2>Información del Perfil</h2>
-                <form id="profileForm">
-                    <label for="username">Usuario:</label>
-                    <input type="text" id="username" value="${userData.username}" readonly>
-
-                    <label for="email">Correo electrónico:</label>
-                    <input type="email" id="email" value="${userData.email}" required>
-
-                    <label for="nif">NIF:</label>
-                    <input type="text" id="nif" value="${userData.nif}" readonly>
-
-                    <label for="address">Dirección:</label>
-                    <input type="text" id="address" value="${userData.address}" required>
-
-                    <label for="city">Ciudad:</label>
-                    <input type="text" id="city" value="${userData.city}" required>
-
-                    <label for="postalCode">Código Postal:</label>
-                    <input type="text" id="postalCode" value="${userData.postalCode}" required>
-
-                    <button type="submit">Actualizar</button>
-                </form>
+                <div class="profile-container">
+                    <form id="profileForm" class="profile-form">
+                        <label for="username">Usuario:</label>
+                        <input type="text" id="username" value="${userData.username}" readonly style="pointer-events: none;">
+            
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" value="${userData.email}" required>
+            
+                        <label for="nif">NIF:</label>
+                        <input type="text" id="nif" value="${userData.nif}" readonly style="pointer-events: none;">
+            
+                        <label for="address">Dirección:</label>
+                        <input type="text" id="address" value="${userData.address}" required style="pointer-events: none;">
+            
+                        <label for="city">Ciudad:</label>
+                        <input type="text" id="city" value="${userData.city}" required style="pointer-events: none;">
+            
+                        <label for="postalCode">Código Postal:</label>
+                        <input type="text" id="postalCode" value="${userData.postalCode}" required style="pointer-events: none;">
+            
+                        <button type="submit">Actualizar</button>
+                    </form>
+                </div>
             `;
 
             // Evento para enviar el formulario
