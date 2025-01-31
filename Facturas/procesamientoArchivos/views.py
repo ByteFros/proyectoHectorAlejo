@@ -1,31 +1,35 @@
-from django.http import FileResponse, Http404, JsonResponse
+import openai
+import pdfplumber
+import pandas as pd
+from django.http import FileResponse, Http404, JsonResponse, HttpResponse
 from django.shortcuts import render
-from .forms import InvoiceForm  # Cambia al nuevo formulario que incluye los campos adicionales
+from .forms import InvoiceForm
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Invoice
-import logging
 from django.db.models import Sum
-
+import logging
 logger = logging.getLogger(__name__)
 
+
+openai.api_key = 'TU_API_KEY_DE_OPENAI'
 
 # views.py
 
 @login_required
 def upload_invoice(request):
     if request.method == 'POST':
-        logger.info(f"POST data: {request.POST}")  # Log para depuración
-        logger.info(f"FILES data: {request.FILES}")  # Log para depuración
+        logger.info(f"POST data: {request.POST}")
+        logger.info(f"FILES data: {request.FILES}")
 
         form = InvoiceForm(request.POST, request.FILES)
         if form.is_valid():
             invoice = form.save(commit=False)
-            invoice.user = request.user  # Asocia la factura al usuario actual
+            invoice.user = request.user
             invoice.save()
             return JsonResponse({'message': 'Factura subida correctamente.'}, status=200)
         else:
-            logger.error(f"Errores del formulario: {form.errors}")  # Log para errores
+            logger.error(f"Errores del formulario: {form.errors}")
             return JsonResponse({'error': form.errors}, status=400)
     else:
         form = InvoiceForm()
@@ -62,12 +66,8 @@ def list_invoices(request):
 
 @login_required
 def delete_invoice(request, invoice_id):
-    """
-    Elimina una factura específica si pertenece al usuario autenticado.
-    """
-    if request.method != 'DELETE':
+    if request.method not in ['DELETE', 'POST']:
         return JsonResponse({'error': 'Método no permitido.'}, status=405)
-
     try:
         invoice = get_object_or_404(Invoice, id=invoice_id, user=request.user)
         invoice.delete()
@@ -76,8 +76,6 @@ def delete_invoice(request, invoice_id):
         return JsonResponse({'error': 'Factura no encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-
-
 @login_required
 def list_user_invoices(request):
     """
@@ -150,3 +148,62 @@ def view_invoice(request, invoice_id):
         return JsonResponse({'error': 'Factura no encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+def preview_invoice(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id, user=request.user)
+    file_path = invoice.file.path
+
+    extracted_data = analyze_invoice_with_chatgpt(file_path)
+    return JsonResponse({"invoice": invoice.id, "data": extracted_data}, status=200)
+
+def extract_text_from_pdf(file_path):
+    """Extrae el texto de un PDF."""
+    with pdfplumber.open(file_path) as pdf:
+        return "\n".join(page.extract_text() for page in pdf.pages if page.extract_text())
+
+def extract_data_from_excel(file_path):
+    """Convierte un archivo Excel en un string legible."""
+    df = pd.read_excel(file_path)
+    return df.to_csv(index=False, sep="\t")  # Formateamos como texto tabulado
+
+def extract_data_from_csv(file_path):
+    """Convierte un CSV en un string legible."""
+    df = pd.read_csv(file_path)
+    return df.to_csv(index=False, sep="\t")
+
+def analyze_invoice_with_chatgpt(file_path):
+    """Extrae datos de una factura y los analiza con OpenAI."""
+    if file_path.endswith('.pdf'):
+        extracted_text = extract_text_from_pdf(file_path)
+    elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
+        extracted_text = extract_data_from_excel(file_path)
+    elif file_path.endswith('.csv'):
+        extracted_text = extract_data_from_csv(file_path)
+    else:
+        return {"error": "Formato de archivo no compatible."}
+
+    if not extracted_text:
+        return {"error": "No se pudo extraer texto del archivo."}
+
+    prompt = f"""
+    Analiza la siguiente factura y extrae los datos clave:
+    - Concepto
+    - Costo
+    - Moneda
+    - Fecha
+    - Tipo de factura (cobrada/pagada)
+
+    Datos de la factura:
+    {extracted_text}
+    """
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "Eres un asistente experto en análisis de facturas."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    return response["choices"][0]["message"]["content"]

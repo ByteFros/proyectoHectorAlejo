@@ -11,67 +11,80 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 id="welcomeMessage">¡Bienvenid@, usuario!</h1>
-            <button class="logout" id="logoutButton">Logout</button>
-        </header>
-        <div class="content">
-            <nav class="menu">
-                <ul>
-                    <li><button id="home">Inicio</button></li>
-                    <li><button id="profileButton">Perfil</button></li>
-                    <li><button id="viewInvoices">Mis facturas</button></li>
-                    <li><button id="genInvoice">Generar factura</button></li>
-                </ul>
-            </nav>
-            <main class="main-content" id="main-content">
-                <div id="homeContent">
-                    <!-- Contenido del botón Home se carga dinámicamente -->
+<div class="container">
+    <header>
+        <h1 id="welcomeMessage">¡Bienvenid@, {{ user.username }}!</h1>
+        <form id="logoutForm" action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="logout">Logout</button>
+        </form>
+
+    </header>
+    <div class="content">
+        <nav class="menu">
+            <ul>
+                <li>
+                    <button id="home">Inicio</button>
+                </li>
+                <li>
+                    <button id="profileButton">Perfil</button>
+                </li>
+                <li>
+                    <button id="viewInvoices">Mis facturas</button>
+                </li>
+                <li>
+                    <button id="genInvoice">Generar factura</button>
+                </li>
+            </ul>
+        </nav>
+        <main class="main-content" id="main-content">
+            <div id="homeContent">
+                <!-- Contenido del botón Home se carga dinámicamente -->
+            </div>
+            <div id="profileContent" style="display:none;">
+                <div class="profile-section"></div>
+            </div>
+            <div id="invoicesContent" style="display: none;">
+                <div class="invoice-section">
+                    <table class="invoice-table">
+                        <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Costo</th>
+                            <th>Moneda</th>
+                            <th>Tipo de factura</th>
+                            <th>Mostrar</th>
+                            <th>Descargar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                        </thead>
+                        <tbody id="invoiceTableBody">
+                        <!-- Filas dinámicas -->
+                        </tbody>
+                    </table>
                 </div>
-                <div id="profileContent" style="display:none;">
-                    <div class="profile-section"></div>
-                </div>
-                <div id="invoicesContent" style="display: none;">
-                    <div class="invoice-section">
-                        <table class="invoice-table">
-                            <thead>
-                                <tr>
-                                    <th>Concepto</th>
-                                    <th>Costo</th>
-                                    <th>Moneda</th>
-                                    <th>Tipo de factura</th>
-                                    <th>Mostrar</th>
-                                    <th>Descargar</th>
-                                    <th>Eliminar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoiceTableBody">
-                                <!-- Filas dinámicas -->
-                            </tbody>
-                        </table>
-                    </div>
-                        <table class="totals-table">
-                            <thead>
-                                <tr>
-                                    <th>Tipo</th>
-                                    <th>Total (€)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="totalsTableBody">
-                                <!-- Filas dinámicas -->
-                            </tbody>
-                        </table>
-                        <button id="uploadInvoice" class="upload-btn">Subir Factura</button>
-            </main>
-        </div>
+                <table class="totals-table">
+                    <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Total (€)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="totalsTableBody">
+                    <!-- Filas dinámicas -->
+                    </tbody>
+                </table>
+                <button id="uploadInvoice" class="upload-btn">Subir Factura</button>
+        </main>
     </div>
-    <!-- Carga de scripts -->
-    <script src="{% static 'accounts/js/home.js' %}"></script>
-    <script src="{% static 'accounts/js/invoices.js' %}"></script>
-    <script src="{% static 'accounts/js/profile.js' %}"></script>
-    <script src="{% static 'accounts/js/popup.js' %}"></script>
-    <script src="{% static 'accounts/js/genInvoicePopup.js' %}"></script>
-    <script src="{% static 'accounts/js/main.js' %}"></script>
+</div>
+<!-- Carga de scripts -->
+<script src="{% static 'accounts/js/home.js' %}"></script>
+<script src="{% static 'accounts/js/logout.js' %}"></script>
+<script src="{% static 'accounts/js/invoices.js' %}"></script>
+<script src="{% static 'accounts/js/profile.js' %}"></script>
+<script src="{% static 'accounts/js/popup.js' %}"></script>
+<script src="{% static 'accounts/js/genInvoicePopup.js' %}"></script>
+<script src="{% static 'accounts/js/main.js' %}"></script>
 </body>
 </html>

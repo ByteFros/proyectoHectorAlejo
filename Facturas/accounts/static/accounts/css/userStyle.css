@@ -29,6 +29,7 @@ header {
 }
 
 .logout {
+    display: inline-block;
     position: absolute;
     right: 20px;
     top: 50%;
