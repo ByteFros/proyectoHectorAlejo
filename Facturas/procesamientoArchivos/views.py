@@ -51,10 +51,16 @@ def edit_invoice(request, invoice_id):
 def download_invoice(request, invoice_id):
     try:
         invoice = Invoice.objects.get(id=invoice_id, user=request.user)
-        response = FileResponse(open(invoice.file.path, 'rb'))
+        if not invoice.file or not invoice.file.path:
+            return JsonResponse({'error': 'El archivo no existe.'}, status=404)
+
+        response = FileResponse(open(invoice.file.path, 'rb'), as_attachment=True)
+        response['Content-Disposition'] = f'attachment; filename="{invoice.file.name}"'
         return response
     except Invoice.DoesNotExist:
         raise Http404("Factura no encontrada.")
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required
