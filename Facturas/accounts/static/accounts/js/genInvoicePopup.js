@@ -3,14 +3,14 @@ const setupGenInvoicePopup = () => {
 
     const showInvoicePopup = async () => {
         // Obtener los datos del usuario
-        let userData = {};
+        let companyData = {};
         try {
             const response = await fetch('/accounts/profile/data/');
 
             if (!response.ok) {
-                throw new Error('Error al obtener los datos del usuario');
+                throw new Error('Error al obtener los datos de la empresa');
             }
-            userData = await response.json();
+            companyData = await response.json();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -21,16 +21,16 @@ const setupGenInvoicePopup = () => {
                 <div class="popup-content">
                     <form id="invoiceForm">
                         <label for="clientName">Nombre del Cliente:</label>
-                        <input type="text" id="clientName" name="clientName" value="${userData.username || ''}" required>
+                        <input type="text" id="clientName" name="clientName" required>
 
                         <label for="clientEmail">Email del Cliente:</label>
-                        <input type="email" id="clientEmail" name="clientEmail" value="${userData.email || ''}" required>
+                        <input type="email" id="clientEmail" name="clientEmail" required>
 
                         <label for="clientAddress">Dirección del Cliente:</label>
-                        <input type="text" id="clientAddress" name="clientAddress" value="${userData.address || ''}" required>
+                        <input type="text" id="clientAddress" name="clientAddress" required>
 
                         <label for="clientNIF">NIF del Cliente:</label>
-                        <input type="text" id="clientNIF" name="clientNIF" value="${userData.nif || ''}" required>
+                        <input type="text" id="clientNIF" name="clientNIF" required>
 
                         <label for="clientPhone">Número de Teléfono:</label>
                         <input type="text" id="clientPhone" name="clientPhone" required>
@@ -107,11 +107,11 @@ const setupGenInvoicePopup = () => {
             // Encabezado con logo y título
             doc.setFontSize(20);
             doc.setTextColor(40);
-            doc.text(clientName || "Nombre no disponible", 20, 20);
+            doc.text(companyData.username || "Nombre no disponible", 20, 20);
             doc.setFontSize(12);
-            doc.text(clientAddress || "Dirección no disponible", 20, 25);
-            doc.text(clientPhone ? `Teléfono: ${clientPhone}` : "Teléfono no disponible", 20, 30);
-            doc.text(clientEmail ? `Email: ${clientEmail}` : "Email no disponible", 20, 35);
+            doc.text(companyData.address || "Dirección no disponible", 20, 25);
+            doc.text(companyData.nif || "Teléfono no disponible", 20, 30);
+            doc.text(clientEmail ? `Email: ${companyData.email}` : "Email no disponible", 20, 35);
 
             doc.setFontSize(18);
             doc.text('Factura', 105, 25,{ align: 'left' });
