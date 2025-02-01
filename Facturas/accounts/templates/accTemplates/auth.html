@@ -9,6 +9,15 @@
 </head>
 <body>
     <div class="container" id="container">
+        <!-- Bloque de mensajes -->
+        {% if messages %}
+            <div id="messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <!-- Encabezado dinámico que cambia entre Login y Register -->
         <div class="header" id="header">Login</div>
 

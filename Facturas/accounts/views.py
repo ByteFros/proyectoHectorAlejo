@@ -61,19 +61,19 @@ def auth_view(request):
         if form_type == 'register':
             register_form = CustomUserCreationForm(request.POST)
             login_form = AuthenticationForm()  # Formulario vacío para el login
+
             if register_form.is_valid():
-                try:
-                    register_form.save()
-                    messages.success(request, 'Usuario registrado con éxito. ¡Ahora puedes iniciar sesión!')
-                    return redirect('auth')
-                except ValidationError as e:
-                    messages.error(request, e.message)
+                user = register_form.save()
+                messages.success(request, 'Usuario registrado con éxito. ¡Ahora puedes iniciar sesión!')
+                return redirect('auth')
             else:
+                print("❌ Errores en el formulario de registro:", register_form.errors)  # 🔍 Muestra errores en consola
                 messages.error(request, 'Por favor, corrige los errores del formulario de registro.')
 
         elif form_type == 'login':
             login_form = AuthenticationForm(data=request.POST)
             register_form = CustomUserCreationForm()  # Formulario vacío para el registro
+
             if login_form.is_valid():
                 user = login_form.get_user()
                 login(request, user)
@@ -83,6 +83,10 @@ def auth_view(request):
                 messages.error(request, 'Usuario o contraseña incorrectos.')
 
     else:
+        # 🚀 Limpia los mensajes solo en GET (para evitar mensajes viejos)
+        storage = messages.get_messages(request)
+        list(storage)  # Consume los mensajes para limpiarlos
+
         login_form = AuthenticationForm()
         register_form = CustomUserCreationForm()
 
@@ -91,7 +95,6 @@ def auth_view(request):
         'register_form': register_form,
         'isLogin': True
     })
-
 
 
 def my_view(request):
