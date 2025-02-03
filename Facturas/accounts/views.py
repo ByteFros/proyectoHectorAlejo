@@ -22,21 +22,31 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'accTemplates/register.html', {'form': form})
 
+
 @login_required
 def user_profile(request):
     user = request.user
 
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)  # Leer JSON del request
-            user.email = data.get('email', user.email)
-            user.address = data.get('address', user.address)
-            user.city = data.get('city', user.city)
-            user.postalCode = data.get('postalCode', user.postalCode)
-            user.save()
-            return JsonResponse({'message': 'Perfil actualizado correctamente.'})
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Solicitud inválida.'}, status=400)
+        # 📌 Procesar los datos del formulario
+        user.email = request.POST.get('email', user.email)
+        user.address = request.POST.get('address', user.address)
+        user.city = request.POST.get('city', user.city)
+        user.postalCode = request.POST.get('postalCode', user.postalCode)
+
+        # 📌 Verificar si el usuario subió una nueva imagen
+        if 'company_logo' in request.FILES:
+            # Eliminar la imagen anterior si existe
+            if user.company_logo:
+                user.company_logo.delete(save=False)
+
+            # Guardar la nueva imagen
+            user.company_logo = request.FILES['company_logo']
+
+        # Guardar los cambios en el usuario
+        user.save()
+
+        return JsonResponse({'message': 'Perfil actualizado correctamente.', 'company_logo': user.company_logo.url if user.company_logo else None})
 
     return render(request, 'accTemplates/userProfile.html', {'user': user})
 
@@ -50,6 +60,7 @@ def get_user_profile(request):
         'address': user.address,
         'city': user.city,
         'postalCode': user.postalCode,
+        'company_logo': user.company_logo.url if user.company_logo else None,
     }
     return JsonResponse(data)
 

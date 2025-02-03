@@ -191,7 +191,7 @@ form button:hover {
     max-width: 400px;
 }
 
-#label.username, #label.email, #label.nif, #label.address, #label.city, #label.postalCode {
+#label.username, #label.email, #label.nif, #label.address, #label.city, #label.postalCode, label.companyLogo {
     font-size: 12px;
 }
 
@@ -520,4 +520,10 @@ input[type="file"] {
         flex-direction: column;
     }
 }
+
+/* 🔹 Ocultar la vista previa de la imagen en el perfil */
+.image-preview img {
+    display: none;
+}
+
 
