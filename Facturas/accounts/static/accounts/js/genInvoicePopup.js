@@ -126,10 +126,20 @@ const setupGenInvoicePopup = () => {
             doc.setFontSize(20);
             doc.setTextColor(40);
             doc.text(companyData.username || "Nombre no disponible", 20, 20);
+
             doc.setFontSize(12);
-            doc.text(companyData.address || "Dirección no disponible", 20, 25);
-            doc.text(companyData.nif || "Teléfono no disponible", 20, 30);
-            doc.text(clientEmail ? `Email: ${companyData.email}` : "Email no disponible", 20, 35);
+            let yPosition = 30; // Posición inicial Y
+
+            // 📌 Ciudad y Código Postal en la misma línea
+            doc.text(companyData.city ? `Ciudad: ${companyData.city}` : "Ciudad no disponible", 20, yPosition);
+            doc.text(companyData.postalCode ? `Código Postal: ${companyData.postalCode}` : "Código postal no disponible", 100, yPosition);
+
+            yPosition += 5; // Mover la siguiente línea hacia abajo
+            doc.text(companyData.nif ? `NIF: ${companyData.nif}` : "NIF no disponible", 20, yPosition);
+            yPosition += 5;
+            doc.text(companyData.address ? `Dirección: ${companyData.address}` : "Dirección no disponible", 20, yPosition);
+            yPosition += 5;
+            doc.text(companyData.email ? `Email: ${companyData.email}` : "Email no disponible", 20, yPosition);
 
             doc.setFontSize(18);
             doc.text('Factura', 105, 25,{ align: 'left' });
