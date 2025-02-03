@@ -36,7 +36,7 @@ const setupInvoicesButton = () => {
                     <td>${invoice.currency || 'Sin definir'}</td>
                     <td>${invoice.type || 'Sin definir'}</td>
                     <td><button class="action-btn show" data-id="${invoice.id}">Mostrar</button></td>
-                    <td><a href="${invoice.fileUrl}" target="_blank" class="action-btn download">Descargar</a></td>
+                    <td><button class="action-btn download" data-id="${invoice.id}">Descargar</button></td>
                     <td><button class="action-btn delete" data-id="${invoice.id}">Eliminar</button></td>
                 `;
                 invoiceTableBody.appendChild(row);

@@ -18,7 +18,6 @@
             {% csrf_token %}
             <button type="submit" class="logout">Logout</button>
         </form>
-
     </header>
     <div class="content">
         <nav class="menu">
@@ -75,12 +74,13 @@
                     </tbody>
                 </table>
                 <button id="uploadInvoice" class="upload-btn">Subir Factura</button>
+            </div>
         </main>
     </div>
 </div>
+
 <!-- Carga de scripts -->
 <script src="{% static 'accounts/js/home.js' %}"></script>
-<script src="{% static 'accounts/js/logout.js' %}"></script>
 <script src="{% static 'accounts/js/invoices.js' %}"></script>
 <script src="{% static 'accounts/js/profile.js' %}"></script>
 <script src="{% static 'accounts/js/popup.js' %}"></script>

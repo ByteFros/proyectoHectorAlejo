@@ -4,5 +4,4 @@ document.addEventListener('DOMContentLoaded', () => {
     setupProfileButton();
     setupInvoicePopup();
     setupGenInvoicePopup();
-    setupLogoutButton();
 });

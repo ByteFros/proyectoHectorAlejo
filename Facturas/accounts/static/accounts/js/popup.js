@@ -8,7 +8,7 @@ const popupHtml = `
             <h2>Agregar Factura</h2>
             <form id="popupForm" enctype="multipart/form-data">
                 <label for="file">Archivo de Factura:</label>
-                <input type="file" id="file" name="file" accept=".xlsx,.csv" required>
+                <input type="file" id="file" name="file" accept=".xlsx,.csv,.pdf" required>
 
                 <label for="concepto">Concepto:</label>
                 <input type="text" id="concepto" name="concepto" required>

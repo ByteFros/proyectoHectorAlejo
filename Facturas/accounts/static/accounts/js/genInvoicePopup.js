@@ -1,8 +1,34 @@
-console.log("gen invoice script se ha cargado correctamente ! ! ! !")
 const setupGenInvoicePopup = () => {
     const genInvoiceButton = document.getElementById('genInvoice');
 
-    const showInvoicePopup = () => {
+    const showInvoicePopup = async () => {
+        // Obtener los datos del usuario
+        let companyData = {};
+        try {
+            const response = await fetch('/accounts/profile/data/');
+
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos de la empresa');
+            }
+            companyData = await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+        let logoBase64 = null;
+        if (companyData.company_logo) {
+            try {
+                const imageResponse = await fetch(companyData.company_logo);
+                const imageBlob = await imageResponse.blob();
+                const reader = new FileReader();
+                reader.readAsDataURL(imageBlob);
+                await new Promise(resolve => (reader.onloadend = resolve));
+                logoBase64 = reader.result; // 📌 Guardar imagen en Base64
+            } catch (error) {
+                console.error("Error al cargar la imagen del logo:", error);
+            }
+        }
+
         // Crear el HTML del popup
         const popupHtml = `
             <div id="popup" class="popup-overlay">
@@ -92,14 +118,18 @@ const setupGenInvoicePopup = () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
+            if (logoBase64) {
+                doc.addImage(logoBase64, 'PNG', 15, 10, 40, 20);  // 📌 Ajustar tamaño del logo
+            }
+
             // Encabezado con logo y título
             doc.setFontSize(20);
             doc.setTextColor(40);
-            doc.text('Mi Empresa S.L.', 20, 20);
+            doc.text(companyData.username || "Nombre no disponible", 20, 20);
             doc.setFontSize(12);
-            doc.text('Calle Ejemplo, 123', 20, 25);
-            doc.text('Ciudad, País', 20, 30);
-            doc.text('Teléfono: +34 600 000 000', 20, 35);
+            doc.text(companyData.address || "Dirección no disponible", 20, 25);
+            doc.text(companyData.nif || "Teléfono no disponible", 20, 30);
+            doc.text(clientEmail ? `Email: ${companyData.email}` : "Email no disponible", 20, 35);
 
             doc.setFontSize(18);
             doc.text('Factura', 105, 25,{ align: 'left' });
