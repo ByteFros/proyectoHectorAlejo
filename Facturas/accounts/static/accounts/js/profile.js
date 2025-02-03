@@ -19,29 +19,29 @@ const setupProfileButton = () => {
                 <div class="profile-container">
                     <form id="profileForm" class="profile-form" enctype="multipart/form-data">
                         <label for="username">Usuario:</label>
-                        <input type="text" id="username" value="${userData.username}" readonly>
+                        <input type="text" id="username" value="${userData.username}" readonly style="pointer-events: none;">
 
                         <label for="email">Correo electrónico:</label>
                         <input type="email" id="email" value="${userData.email}" required>
 
                         <label for="nif">NIF:</label>
-                        <input type="text" id="nif" value="${userData.nif}" readonly>
+                        <input type="text" id="nif" value="${userData.nif}" readonly style="pointer-events: none;">
 
                         <label for="address">Dirección:</label>
-                        <input type="text" id="address" value="${userData.address}" required>
+                        <input type="text" id="address" value="${userData.address}" required style="pointer-events: none;">
 
                         <label for="city">Ciudad:</label>
-                        <input type="text" id="city" value="${userData.city}" required>
+                        <input type="text" id="city" value="${userData.city}" required style="pointer-events: none;">
 
                         <label for="postalCode">Código Postal:</label>
-                        <input type="text" id="postalCode" value="${userData.postalCode}" required>
+                        <input type="text" id="postalCode" value="${userData.postalCode}" required style="pointer-events: none;">
 
-                        <label for="companyLogo">Logo de la Empresa:</label>
+                        <label for="companyLogo">Subir / Cambiar logo</label>
                         <input type="file" id="companyLogo" name="company_logo" accept="image/*">
                         <div class="image-preview">
                             ${userData.company_logo
                                 ? `<img id="currentLogo" src="${userData.company_logo}" alt="Logo de la Empresa">`
-                                : `<p>No se ha subido una imagen aún.</p>`}
+                                : ''}
                         </div>
 
                         <button type="submit">Actualizar</button>
