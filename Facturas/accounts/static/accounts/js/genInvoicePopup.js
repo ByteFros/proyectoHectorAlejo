@@ -15,6 +15,20 @@ const setupGenInvoicePopup = () => {
             console.error('Error:', error);
         }
 
+        let logoBase64 = null;
+        if (companyData.company_logo) {
+            try {
+                const imageResponse = await fetch(companyData.company_logo);
+                const imageBlob = await imageResponse.blob();
+                const reader = new FileReader();
+                reader.readAsDataURL(imageBlob);
+                await new Promise(resolve => (reader.onloadend = resolve));
+                logoBase64 = reader.result; // 📌 Guardar imagen en Base64
+            } catch (error) {
+                console.error("Error al cargar la imagen del logo:", error);
+            }
+        }
+
         // Crear el HTML del popup
         const popupHtml = `
             <div id="popup" class="popup-overlay">
@@ -103,6 +117,10 @@ const setupGenInvoicePopup = () => {
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+
+            if (logoBase64) {
+                doc.addImage(logoBase64, 'PNG', 15, 10, 40, 20);  // 📌 Ajustar tamaño del logo
+            }
 
             // Encabezado con logo y título
             doc.setFontSize(20);
