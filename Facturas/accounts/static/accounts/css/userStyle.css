@@ -178,22 +178,48 @@ form button:hover {
     border-top: 1px solid #ddd;
 }
 
-#h2 {
-    margin: 0;
-    font-size: 15px;
+.profile-container label {
+    font-size: 13px; /* Reducido el tamaño de la fuente para las labels */
 }
 
-.profile-container{
+.profile-container input,
+.profile-container p {
+    font-size: 13px; /* Reducido el tamaño de la fuente para la información mostrada */
+}
+
+.profile-container {
     padding-top: 20px;
     padding-left: 130px;
     width: 70%;
-    height: 70vh;
-    max-width: 400px;
+    height: auto;
+    max-width: 350px; /* Reducido el tamaño para que el contenido sea más compacto */
 }
 
-#label.username, #label.email, #label.nif, #label.address, #label.city, #label.postalCode, label.companyLogo {
-    font-size: 12px;
+.profile-container input[type="file"] {
+    font-size: 14px; /* Reducido el tamaño del texto dentro del selector de archivo */
+    padding: 8px; /* Ajuste de padding para un tamaño más compacto */
 }
+
+.profile-container label[for="companyLogo"] {
+    font-size: 14px; /* Reducido el tamaño de la fuente para las labels */
+    cursor: pointer;
+    display: inline-block;
+    background: #56c596;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.profile-container label[for="companyLogo"]:hover {
+    background: #3fa376;
+}
+
+.profile-container input[type="file"] {
+    display: none; /* Oculta el input de tipo archivo */
+}
+
 
 /* Estilos para el popup */
 .popup-overlay {

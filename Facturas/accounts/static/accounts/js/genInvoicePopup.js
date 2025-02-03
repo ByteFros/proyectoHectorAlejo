@@ -119,27 +119,29 @@ const setupGenInvoicePopup = () => {
             const doc = new jsPDF();
 
             if (logoBase64) {
-                doc.addImage(logoBase64, 'PNG', 15, 10, 40, 20);  // 📌 Ajustar tamaño del logo
+                doc.addImage(logoBase64, 'PNG', 160, 10, 20, 20);  // 📌 Ajustar tamaño del logo
             }
 
             // Encabezado con logo y título
             doc.setFontSize(20);
             doc.setTextColor(40);
-            doc.text(companyData.username || "Nombre no disponible", 20, 20);
+            doc.text(companyData.username || "Nombre no disponible", 20, 50);
             doc.setFontSize(12);
-            doc.text(companyData.address || "Dirección no disponible", 20, 25);
-            doc.text(companyData.nif || "Teléfono no disponible", 20, 30);
-            doc.text(clientEmail ? `Email: ${companyData.email}` : "Email no disponible", 20, 35);
+            doc.text(companyData.address || "Dirección no disponible", 20, 55);
+            doc.text(companyData.city || "Ciudad no disponible", 20, 60);
+            doc.text(companyData.postalCode || "Código Postal no disponible", 20, 65);
+            doc.text(companyData.nif || "NIF no disponible", 20, 70);
+            doc.text(companyData.email ? `${companyData.email}` : "Email no disponible", 20, 75);
 
             doc.setFontSize(18);
-            doc.text('Factura', 105, 25,{ align: 'left' });
+            doc.text('Factura', 105, 50,{ align: 'left' });
             doc.setFontSize(12);
-            doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'left' });
-            doc.text(`Número de factura: ${invoiceNumber}`, 105, 35, { align: 'left' });
+            doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 105, 55, { align: 'left' });
+            doc.text(`Número de factura: ${invoiceNumber}`, 105, 60, { align: 'left' });
 
             // Tabla de información del cliente
             doc.autoTable({
-                startY: 50,
+                startY: 90,
                 head: [['Información del Cliente']],
                 body: [
                     [`Nombre: ${clientName}`],
