@@ -6,6 +6,7 @@ class CustomUser(AbstractUser):
     address = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     postalCode = models.CharField(max_length=20, null=True, blank=True)
+    company_logo = models.ImageField(upload_to="logos/", null=True, blank=True)  # 📌 Campo para la imagen
 
     def __str__(self):
         return self.username

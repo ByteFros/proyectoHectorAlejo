@@ -9,13 +9,14 @@ class CustomUserCreationForm(UserCreationForm):
     address = forms.CharField(max_length=255, required=True, label="Dirección")
     city = forms.CharField(max_length=100, required=True, label="Ciudad")
     postalCode = forms.CharField(max_length=20, required=True, label="Código Postal")
+    company_logo = forms.ImageField(required=False, label="Logo de la Empresa")  # 📌 Nuevo campo
 
     password1 = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
     password2 = forms.CharField(widget=forms.PasswordInput, label="Confirmar Contraseña")
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'nif', 'address', 'city', 'postalCode', 'password1', 'password2')
+        fields = ('username', 'email', 'nif', 'address', 'city', 'postalCode', 'company_logo', 'password1', 'password2')
 
     def clean_password2(self):
         """Validar que las contraseñas coincidan."""
@@ -31,6 +32,7 @@ class CustomUserCreationForm(UserCreationForm):
         """Guardar el usuario con la contraseña correctamente hasheada."""
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])  # 🔥 Asegurar que la contraseña se guarde correctamente
+
         if commit:
             user.save()
         return user

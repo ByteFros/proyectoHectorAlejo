@@ -8,51 +8,58 @@
     <link rel="stylesheet" href="{% static 'accounts/css/indexStyles.css' %}">
 </head>
 <body>
-    <div class="container" id="container">
-        <!-- Bloque de mensajes -->
-        {% if messages %}
-            <div id="messages">
-                {% for message in messages %}
-                    <p class="{{ message.tags }}">{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+<div class="container" id="container">
+    <!-- Bloque de mensajes -->
+    {% if messages %}
+    <div id="messages">
+        {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-        <!-- Encabezado dinámico que cambia entre Login y Register -->
-        <div class="header" id="header">Login</div>
+    <!-- Encabezado dinámico que cambia entre Login y Register -->
+    <div class="header" id="header">Login</div>
 
-        <div class="form" id="form">
-            <!-- Formulario de Login -->
-            <form id="loginForm" method="POST" action="{% url 'auth' %}" style="display: block;">
-                {% csrf_token %}
-                <input type="hidden" name="form_type" value="login">
-                <input type="text" id="username" name="username" placeholder="Username" required>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <button id="actionButton" type="submit">Log In</button>
-            </form>
+    <div class="form" id="form">
+        <!-- Formulario de Login -->
+        <form id="loginForm" method="POST" action="{% url 'auth' %}" style="display: block;">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="login">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <button id="actionButton" type="submit">Log In</button>
+        </form>
 
-            <!-- Formulario de Register -->
-            <form id="registerForm" method="POST" action="{% url 'auth' %}" style="display: none;">
-                {% csrf_token %}
-                <input type="hidden" name="form_type" value="register">
-                <input type="text" id="registerUsername" name="username" placeholder="Nombre de usuario" required>
-                <input type="email" id="email" name="email" placeholder="Email" required>
-                <input type="text" id="nif" name="nif" placeholder="NIF" required>
-                <input type="text" id="address" name="address" placeholder="Dirección" required>
-                <input type="text" id="city" name="city" placeholder="Ciudad" required>
-                <input type="text" id="postalCode" name="postalCode" placeholder="Código Postal" required>
-                <input type="password" id="password1" name="password1" placeholder="Password" required>
-                <input type="password" id="password2" name="password2" placeholder="Confirm Password" required>
-                <button id="registerActionButton" type="submit">Sign Up</button>
-            </form>
+        <!-- Formulario de Register -->
+        <form id="registerForm" method="POST" action="{% url 'auth' %}" enctype="multipart/form-data"
+              style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="register">
+            <input type="text" id="registerUsername" name="username" placeholder="Nombre de usuario" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="text" id="nif" name="nif" placeholder="NIF" required>
+            <input type="text" id="address" name="address" placeholder="Dirección" required>
+            <input type="text" id="city" name="city" placeholder="Ciudad" required>
+            <input type="text" id="postalCode" name="postalCode" placeholder="Código Postal" required>
+            <input type="password" id="password1" name="password1" placeholder="Password" required>
+            <input type="password" id="password2" name="password2" placeholder="Confirm Password" required>
 
-            <!-- Botón para alternar entre Login y Register -->
-            <div class="toggle">
-                <button id="toggleButton" type="button">¿No tienes una cuenta?</button>
-            </div>
+            <!-- Nuevo campo para subir imagen -->
+            <label for="companyLogo">Logo de la Empresa (opcional):</label>
+            <input type="file" id="companyLogo" name="company_logo" accept="image/*">
+
+            <button id="registerActionButton" type="submit">Sign Up</button>
+        </form>
+
+
+        <!-- Botón para alternar entre Login y Register -->
+        <div class="toggle">
+            <button id="toggleButton" type="button">¿No tienes una cuenta?</button>
         </div>
     </div>
+</div>
 
-    <script src="{% static 'accounts/js/authScript.js' %}"></script>
+<script src="{% static 'accounts/js/authScript.js' %}"></script>
 </body>
 </html>

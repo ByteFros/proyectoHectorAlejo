@@ -13,7 +13,7 @@ import json
 
 def register(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)  # 📌 Se añade request.FILES para manejar imágenes
         if form.is_valid():
             form.save()
             messages.success(request, 'Usuario registrado con éxito.')
@@ -59,20 +59,19 @@ def auth_view(request):
         form_type = request.POST.get('form_type')
 
         if form_type == 'register':
-            register_form = CustomUserCreationForm(request.POST)
-            login_form = AuthenticationForm()  # Formulario vacío para el login
+            register_form = CustomUserCreationForm(request.POST, request.FILES)  # 📌 Se añade request.FILES
+            login_form = AuthenticationForm()
 
             if register_form.is_valid():
                 user = register_form.save()
                 messages.success(request, 'Usuario registrado con éxito. ¡Ahora puedes iniciar sesión!')
                 return redirect('auth')
             else:
-                print("❌ Errores en el formulario de registro:", register_form.errors)  # 🔍 Muestra errores en consola
                 messages.error(request, 'Por favor, corrige los errores del formulario de registro.')
 
         elif form_type == 'login':
             login_form = AuthenticationForm(data=request.POST)
-            register_form = CustomUserCreationForm()  # Formulario vacío para el registro
+            register_form = CustomUserCreationForm()
 
             if login_form.is_valid():
                 user = login_form.get_user()
@@ -83,10 +82,6 @@ def auth_view(request):
                 messages.error(request, 'Usuario o contraseña incorrectos.')
 
     else:
-        # 🚀 Limpia los mensajes solo en GET (para evitar mensajes viejos)
-        storage = messages.get_messages(request)
-        list(storage)  # Consume los mensajes para limpiarlos
-
         login_form = AuthenticationForm()
         register_form = CustomUserCreationForm()
 
